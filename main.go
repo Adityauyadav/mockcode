@@ -7,6 +7,7 @@ import (
 
 	"mockcode/db"
 	"mockcode/handler"
+	"mockcode/queue"
 
 	"github.com/joho/godotenv"
 )
@@ -18,6 +19,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	queue.Connect()
 	http.HandleFunc("/submit", handler.Submit)
 	http.ListenAndServe(":8080", nil)
 }

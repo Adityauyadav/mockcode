@@ -3,11 +3,13 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
 
 	"mockcode/db"
+	"mockcode/queue"
 )
 
 type SubmitRequest struct {
@@ -46,6 +48,12 @@ func Submit(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, "Failed to store submission", http.StatusInternalServerError)
+		return
+	}
+	fmt.Println("Pushing to queue:", id)
+	err = queue.Push(id)
+	if err != nil {
+		http.Error(w, "Failed to store to Queue", http.StatusBadRequest)
 		return
 	}
 
